@@ -1,0 +1,55 @@
+# Ignore node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Credentials
+credentials/
+*.key
+*.pem
+
+# Output directories
+output/
+uploads/
+temp/
+*.pptx
+*.md
+!README.md
+!CLAUDE.md
+!AGENTS.md
+!SKILLS.md
+!PRD.md
+!specs/*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Testing
+coverage/
+.nyc_output/
+
+# Build
+dist/
+build/
+
+# Docker
+*.pid
+docker-compose.override.yml

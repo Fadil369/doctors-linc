@@ -1,0 +1,80 @@
+I’ve sketched out an end-to-end Node.js pipeline that:
+
+1. **OCRs** images using Google Vision
+2. **Summarizes**/structures the extracted text into Markdown via LangChain
+3. **Emits** individual `.md` files and bundles them into a PPTX via PptxGenJS
+
+Included are notes for how to set up a PPTX “template” slide master with a `{{content}}` placeholder, plus guidance on a Keynote workflow (using a `.key` with a named text box and scriptable replacement).
+
+You can pull down the full code + template annotations in the canvas. Let me know if you’d like to iterate—e.g. hook into custom slide masters, convert Markdown to styled text boxes, or integrate with a CLI/GUI for doctors and nurses to upload images and download a ready-to-go deck!
+// NodeJS script: Google Vision OCR + LangChain -> Markdown -> PPTX/Keynote
+
+// Install dependencies:
+// npm install @google-cloud/vision langchain pptxgenjs fs
+
+const fs = require('fs');
+const path = require('path');
+const vision = require('@google-cloud/vision');
+const { OpenAI } = require('langchain/llms/openai');
+const { PromptTemplate, LLMChain } = require('langchain');
+const PptxGenJS = require('pptxgenjs');
+
+// 1. Initialize clients
+const ocrClient = new vision.ImageAnnotatorClient();
+const llm = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY });
+
+// 2. OCR & pipeline
+async function processImage(imagePath) {
+  // OCR
+  const [result] = await ocrClient.documentTextDetection(imagePath);
+  const rawText = result.fullTextAnnotation.text;
+
+  // LangChain summarization prompt
+  const prompt = PromptTemplate.fromTemplate(
+    "Convert the following raw OCR text into structured Markdown with headings, lists, diagrams as code blocks:\n```
+    {{raw}}
+```"
+  );
+  const chain = new LLMChain({ llm, prompt });
+  const md = await chain.call({ raw: rawText });
+  return md.text;
+}
+
+// 3. Generate PPTX with Markdown injection
+async function createPresentation(markdowns, outputPath) {
+  const pres = new PptxGenJS();
+  for (const md of markdowns) {
+    const slide = pres.addSlide();
+    // Title placeholder
+    slide.addText('Content Slide', { x:1, y:0.5, fontSize:24, bold:true });
+    // Inject markdown as plain text (or convert to shapes)
+    slide.addText(md, { x:0.5, y:1.5, w:'90%', h:'70%', fontFace:'Courier New', fontSize:12 });
+  }
+  await pres.writeFile({ fileName: outputPath });
+}
+
+// 4. Main
+(async () => {
+  const imgDir = './images';
+  const files = fs.readdirSync(imgDir).filter(f => /\.png|\.jpg/.test(f));
+  const markdowns = [];
+  for (const file of files) {
+    console.log('Processing', file);
+    const md = await processImage(path.join(imgDir, file));
+    markdowns.push(md);
+    fs.writeFileSync(`./output/${path.basename(file, path.extname(file))}.md`, md);
+  }
+  await createPresentation(markdowns, './output/presentation.pptx');
+  console.log('Done: Markdown files and presentation generated.');
+})();
+
+/**
+ * PowerPoint Template:
+ * - Create slide master with placeholder text box titled {{content}}
+ * - In code above, PptxGenJS will inject into that placeholder.
+ *
+ * Keynote Template:
+ * - Use a .key file with a text placeholder named "ContentPlaceholder"
+ * - Use AppleScript or `node-keynote` to open template.key, find placeholder, replace with Markdown-rendered HTML.
+ */
+
