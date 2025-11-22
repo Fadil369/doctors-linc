@@ -41,6 +41,7 @@ images/*.pdf
 !DEVCONTAINER.md
 !QUICKSTART.md
 !README-DEVCONTAINER.md
+!SETUP-COMPLETE.md
 !specs/*.md
 !docs/**/*.md
 
