@@ -17,7 +17,7 @@ export interface MedicalProcessingInput {
 }
 
 export interface MedicalProcessingResult {
-  structured Text: string;
+  structuredText: string;
   documentType: string;
   entities: MedicalEntity[];
   confidence: number;
