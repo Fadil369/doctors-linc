@@ -108,7 +108,7 @@ class DoctorsLincServer {
       });
     } catch (error) {
       logger.error('❌ Failed to start server:', error);
-      process.exit(1);
+      throw error;
     }
   }
 
@@ -128,9 +128,11 @@ class DoctorsLincServer {
       await redisService.disconnect();
 
       logger.info('✅ Server shutdown complete');
+      // eslint-disable-next-line no-process-exit
       process.exit(0);
     } catch (error) {
       logger.error('❌ Error during shutdown:', error);
+      // eslint-disable-next-line no-process-exit
       process.exit(1);
     }
   }
@@ -140,12 +142,13 @@ class DoctorsLincServer {
 const server = new DoctorsLincServer();
 
 // Handle shutdown signals
-process.on('SIGTERM', () => server.shutdown());
-process.on('SIGINT', () => server.shutdown());
+process.on('SIGTERM', () => void server.shutdown());
+process.on('SIGINT', () => void server.shutdown());
 
 // Start the server
 server.start().catch((error) => {
   logger.error('Fatal error:', error);
+  // eslint-disable-next-line no-process-exit
   process.exit(1);
 });
 

@@ -111,7 +111,7 @@ export class MasterLincAgent {
   /**
    * Monitor pipeline health
    */
-  public async healthCheck(): Promise<{ status: string; agents: Record<string, string> }> {
+  public healthCheck(): { status: string; agents: Record<string, string> } {
     logger.debug('MASTERLINC: Performing health check');
     
     return {

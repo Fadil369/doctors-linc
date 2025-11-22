@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Doctors-Linc CLI
  * Command-line interface for medical document processing
@@ -79,7 +78,7 @@ program
       logger.info('✅ OCR completed successfully');
     } catch (error) {
       logger.error('❌ OCR failed:', error);
-      process.exit(1);
+      throw error;
     }
   });
 
@@ -156,7 +155,7 @@ program
       logger.info('✅ Pipeline completed successfully');
     } catch (error) {
       logger.error('❌ Processing failed:', error);
-      process.exit(1);
+      throw error;
     }
   });
 
@@ -201,7 +200,7 @@ program
       console.log('═'.repeat(80));
     } catch (error) {
       logger.error('❌ Health check failed:', error);
-      process.exit(1);
+      throw error;
     }
   });
 

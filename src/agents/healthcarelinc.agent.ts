@@ -270,7 +270,7 @@ Structured Output (Markdown):`;
   /**
    * Health check
    */
-  public async healthCheck(): Promise<{ status: string; ready: boolean }> {
+  public healthCheck(): { status: string; ready: boolean } {
     return {
       status: this.initialized ? 'operational' : 'not_configured',
       ready: this.initialized,

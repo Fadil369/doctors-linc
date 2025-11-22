@@ -237,7 +237,7 @@ export class OCRLincAgent {
   /**
    * Health check
    */
-  public async healthCheck(): Promise<{ status: string; ready: boolean }> {
+  public healthCheck(): { status: string; ready: boolean } {
     return {
       status: this.visionClient ? 'operational' : 'not_configured',
       ready: this.visionClient !== null,
