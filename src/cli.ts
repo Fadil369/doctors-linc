@@ -172,7 +172,7 @@ program
 
       // Check MASTERLINC
       const masterAgent = MasterLincAgent.getInstance();
-      const masterHealth = await masterAgent.healthCheck();
+      const masterHealth = masterAgent.healthCheck();
       console.log(`\nMASTERLINC: ${masterHealth.status === 'healthy' ? '✅' : '❌'} ${masterHealth.status}`);
       console.log('  Agents:');
       for (const [agent, status] of Object.entries(masterHealth.agents)) {
@@ -182,12 +182,12 @@ program
 
       // Check OCRLINC
       const ocrAgent = OCRLincAgent.getInstance();
-      const ocrHealth = await ocrAgent.healthCheck();
+      const ocrHealth = ocrAgent.healthCheck();
       console.log(`\nOCRLINC: ${ocrHealth.ready ? '✅' : '⚠️'} ${ocrHealth.status}`);
 
       // Check HEALTHCARELINC
       const healthcareAgent = HealthCareLincAgent.getInstance();
-      const healthcareHealth = await healthcareAgent.healthCheck();
+      const healthcareHealth = healthcareAgent.healthCheck();
       console.log(`HEALTHCARELINC: ${healthcareHealth.ready ? '✅' : '⚠️'} ${healthcareHealth.status}`);
 
       // Check configuration

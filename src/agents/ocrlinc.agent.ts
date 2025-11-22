@@ -186,7 +186,7 @@ export class OCRLincAgent {
   private inferBlockType(text: string): TextBlock['type'] {
     // Simple heuristics for block type detection
     if (text.match(/^#{1,6}\s/)) return 'heading';
-    if (text.match(/^[\*\-\+]\s/)) return 'list';
+    if (text.match(/^[*\-+]\s/)) return 'list';
     if (text.match(/\|.*\|/)) return 'table';
     if (text.length < 50 && text.match(/^[A-Z]/)) return 'heading';
     return 'paragraph';
