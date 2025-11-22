@@ -34,6 +34,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     
     /* Type Checking */
     "strict": true,
