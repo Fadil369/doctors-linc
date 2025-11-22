@@ -9,8 +9,8 @@ import { config } from '../config';
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 // Custom log format
-const logFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${String(timestamp)} [${String(level)}]: ${stack || message}`;
+const logFormat = printf(({ level, message, timestamp, stack }: { level: string; message: string; timestamp: string; stack?: string }) => {
+  return `${timestamp} [${level}]: ${stack || message}`;
 });
 
 // Create logger
