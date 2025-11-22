@@ -63,7 +63,8 @@
     "dist",
     "build",
     "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    ".eslintrc.js"
   ],
   "ts-node": {
     "require": ["tsconfig-paths/register"],

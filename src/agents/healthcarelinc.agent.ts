@@ -88,12 +88,12 @@ export class HealthCareLincAgent {
 
       // Process text with LLM
       const formattedPrompt = await prompt.format({ rawText: input.rawText });
-      const structuredText = await this.llm.call([{ role: 'user', content: formattedPrompt }]);
+      const response = await this.llm.invoke(formattedPrompt);
 
       // Extract medical entities (simplified for now)
-      const contentString = typeof structuredText.content === 'string' 
-        ? structuredText.content 
-        : JSON.stringify(structuredText.content);
+      const contentString = typeof response === 'string' 
+        ? response 
+        : (typeof response.content === 'string' ? response.content : JSON.stringify(response.content));
       const entities = this.extractEntities(contentString);
 
       // Detect document type
@@ -201,11 +201,13 @@ Structured Output (Markdown):`;
     const medRegex = /\b([A-Z][a-z]+(?:in|ol|ide|ine))\s+(\d+\s*(?:mg|mcg|g|mL))/gi;
     let match;
     while ((match = medRegex.exec(text)) !== null) {
-      entities.push({
-        type: 'medication',
-        name: match[1],
-        value: match[2],
-      });
+      if (match[1] && match[2]) {
+        entities.push({
+          type: 'medication',
+          name: match[1],
+          value: match[2],
+        });
+      }
     }
 
     return entities;

@@ -64,5 +64,17 @@ module.exports = {
         '@typescript-eslint/no-unsafe-member-access': 'off',
       },
     },
+    {
+      files: ['src/agents/*.ts', 'src/cli.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
+        '@typescript-eslint/no-unsafe-member-access': 'warn',
+        '@typescript-eslint/no-unsafe-call': 'warn',
+        '@typescript-eslint/no-unsafe-return': 'warn',
+        '@typescript-eslint/no-unsafe-argument': 'warn',
+        '@typescript-eslint/require-await': 'warn',
+        '@typescript-eslint/restrict-template-expressions': 'warn',
+      },
+    },
   ],
 };
