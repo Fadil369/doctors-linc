@@ -17,7 +17,7 @@ export function setupMiddleware(app: Application): void {
 
   // CORS
   app.use(cors({
-    origin: config.isDevelopment ? '*' : process.env.ALLOWED_ORIGINS?.split(','),
+    origin: config.isDevelopment ? '*' : process.env['ALLOWED_ORIGINS']?.split(','),
     credentials: true,
   }));
 

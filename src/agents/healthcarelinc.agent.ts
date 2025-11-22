@@ -87,17 +87,20 @@ export class HealthCareLincAgent {
       const prompt = this.createPromptTemplate(input.context);
 
       // Process text with LLM
-      const response = await prompt.format({ rawText: input.rawText });
-      const structuredText = await this.llm.invoke(response);
+      const formattedPrompt = await prompt.format({ rawText: input.rawText });
+      const structuredText = await this.llm.call([{ role: 'user', content: formattedPrompt }]);
 
       // Extract medical entities (simplified for now)
-      const entities = this.extractEntities(structuredText.content.toString());
+      const contentString = typeof structuredText.content === 'string' 
+        ? structuredText.content 
+        : JSON.stringify(structuredText.content);
+      const entities = this.extractEntities(contentString);
 
       // Detect document type
       const documentType = this.detectDocumentType(input.rawText);
 
       const result: MedicalProcessingResult = {
-        structuredText: structuredText.content.toString(),
+        structuredText: contentString,
         documentType,
         entities,
         confidence: 0.85, // Placeholder - should be calculated based on LLM response

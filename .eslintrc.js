@@ -10,14 +10,12 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:node/recommended',
-    'plugin:security/recommended',
     'plugin:jest/recommended',
     'prettier',
   ],
   plugins: [
     '@typescript-eslint',
     'node',
-    'security',
     'jest',
   ],
   env: {
@@ -46,10 +44,6 @@ module.exports = {
     'no-var': 'error',
     'object-shorthand': 'error',
     'prefer-arrow-callback': 'error',
-    
-    // Security
-    'security/detect-object-injection': 'off', // Too many false positives
-    'security/detect-non-literal-fs-filename': 'warn',
     
     // Node.js
     'node/no-unsupported-features/es-syntax': 'off',

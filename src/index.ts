@@ -84,7 +84,7 @@ class DoctorsLincServer {
     });
 
     // Global error handler
-    this.app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    this.app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
       logger.error('Unhandled error:', err);
       res.status(500).json({
         error: 'Internal Server Error',

@@ -4,7 +4,7 @@
  * Extracts and preprocesses text from medical images and documents.
  */
 
-import vision from '@google-cloud/vision';
+import { ImageAnnotatorClient, protos } from '@google-cloud/vision';
 import { logger } from '../utils/logger';
 import { config } from '../config';
 
@@ -40,7 +40,7 @@ export interface TextBlock {
 
 export class OCRLincAgent {
   private static instance: OCRLincAgent;
-  private visionClient: vision.ImageAnnotatorClient | null = null;
+  private visionClient: ImageAnnotatorClient | null = null;
 
   private constructor() {
     this.initializeVisionClient();
@@ -59,13 +59,13 @@ export class OCRLincAgent {
   private initializeVisionClient(): void {
     try {
       if (config.googleCloud.credentialsPath) {
-        this.visionClient = new vision.ImageAnnotatorClient({
+        this.visionClient = new ImageAnnotatorClient({
           keyFilename: config.googleCloud.credentialsPath,
         });
         logger.info('✅ OCRLINC: Google Cloud Vision client initialized');
       } else if (config.googleCloud.credentialsJson) {
         const credentials = JSON.parse(Buffer.from(config.googleCloud.credentialsJson, 'base64').toString());
-        this.visionClient = new vision.ImageAnnotatorClient({
+        this.visionClient = new ImageAnnotatorClient({
           credentials,
         });
         logger.info('✅ OCRLINC: Google Cloud Vision client initialized from JSON');
@@ -135,7 +135,7 @@ export class OCRLincAgent {
   /**
    * Extract text blocks from full text annotation
    */
-  private extractBlocks(fullTextAnnotation: vision.protos.google.cloud.vision.v1.ITextAnnotation): TextBlock[] {
+  private extractBlocks(fullTextAnnotation: protos.google.cloud.vision.v1.ITextAnnotation): TextBlock[] {
     const blocks: TextBlock[] = [];
 
     if (!fullTextAnnotation.pages) {
@@ -164,16 +164,16 @@ export class OCRLincAgent {
   /**
    * Get text from a block
    */
-  private getBlockText(block: vision.protos.google.cloud.vision.v1.IBlock): string {
+  private getBlockText(block: protos.google.cloud.vision.v1.IBlock): string {
     if (!block.paragraphs) return '';
 
     return block.paragraphs
-      .map((paragraph) => {
+      .map((paragraph: any) => {
         if (!paragraph.words) return '';
         return paragraph.words
-          .map((word) => {
+          .map((word: any) => {
             if (!word.symbols) return '';
-            return word.symbols.map((symbol) => symbol.text).join('');
+            return word.symbols.map((symbol: any) => symbol.text).join('');
           })
           .join(' ');
       })
@@ -196,7 +196,7 @@ export class OCRLincAgent {
    * Get bounding box coordinates
    */
   private getBoundingBox(
-    boundingBox?: vision.protos.google.cloud.vision.v1.IBoundingPoly | null
+    boundingBox?: protos.google.cloud.vision.v1.IBoundingPoly | null
   ): TextBlock['boundingBox'] {
     if (!boundingBox?.vertices || boundingBox.vertices.length < 2) {
       return undefined;
@@ -214,7 +214,7 @@ export class OCRLincAgent {
   /**
    * Calculate average confidence
    */
-  private calculateConfidence(fullTextAnnotation: vision.protos.google.cloud.vision.v1.ITextAnnotation): number {
+  private calculateConfidence(fullTextAnnotation: protos.google.cloud.vision.v1.ITextAnnotation): number {
     if (!fullTextAnnotation.pages) return 0;
 
     let totalConfidence = 0;
