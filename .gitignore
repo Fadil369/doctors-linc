@@ -39,6 +39,8 @@ images/*.pdf
 !SKILLS.md
 !PRD.md
 !DEVCONTAINER.md
+!QUICKSTART.md
+!README-DEVCONTAINER.md
 !specs/*.md
 !docs/**/*.md
 
