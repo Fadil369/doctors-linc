@@ -890,3 +890,65 @@ describe('parse_medication_order', () => {
 **Version**: 1.0.0  
 **Total Skills**: 20+  
 **Maintainer**: Doctors-Linc Development Team
+
+---
+
+## Custom Agent Skills (Anthropic Format)
+
+### Overview
+
+We've integrated custom skills following [Anthropic's Agent Skills Spec](https://github.com/anthropics/skills) to enhance our medical OCR pipeline. These skills are located in `src/skills/` and follow the standard SKILL.md format.
+
+### Available Custom Skills
+
+#### 1. Medical-OCR Skill (`src/skills/medical-ocr/`)
+- **Purpose**: Medical document OCR processing with clinical entity extraction
+- **Features**: Google Cloud Vision OCR, medical NLP, FHIR compliance
+- **Use Cases**: Prescriptions, lab results, clinical notes processing
+- **HIPAA**: ✓ | **FHIR**: ✓
+
+#### 2. FHIR-Generator Skill (`src/skills/fhir-generator/`)
+- **Purpose**: FHIR R4 resource generation and validation
+- **Features**: Patient, MedicationRequest, Observation, Condition resources
+- **Coding Systems**: LOINC, SNOMED, RxNorm, ICD-10, CPT
+- **HIPAA**: ✓ | **FHIR**: ✓
+
+#### 3. PPTX-Medical Skill (`src/skills/pptx-medical/`)
+- **Purpose**: Professional medical PowerPoint generation
+- **Features**: Patient summaries, lab visualizations, care plans
+- **Templates**: Healthcare color palettes, HIPAA notices
+- **HIPAA**: ✓ | **FHIR**: ✓
+
+### Skill Integration Pipeline
+
+```
+Medical Image
+     ↓
+[Medical-OCR Skill]
+Extract text + entities
+     ↓
+[FHIR-Generator Skill]
+Create FHIR resources
+     ↓
+[PPTX-Medical Skill]
+Generate presentation
+     ↓
+Clinical PowerPoint
+```
+
+### Medical Coding Systems
+
+| System | Purpose | URL |
+|--------|---------|-----|
+| LOINC | Lab tests, observations | https://loinc.org/ |
+| SNOMED CT | Clinical terminology | https://www.snomed.org/ |
+| RxNorm | Medications | https://www.nlm.nih.gov/research/umls/rxnorm/ |
+| ICD-10-CM | Diagnoses | https://www.cdc.gov/nchs/icd/icd-10-cm.htm |
+
+### Reference
+
+Based on skills from https://github.com/anthropics/skills
+- Document skills (PDF, PPTX, DOCX, XLSX)
+- Custom healthcare adaptations
+- HIPAA-compliant workflows
+
